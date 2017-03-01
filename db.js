@@ -29,9 +29,15 @@ function unlock (origin) {
 }
 
 function lock (origin, target) {
-  return unlock(origin)
-    .then(r => knex('locks').insert({ id_origin: origin, id_target: target }))
-    .then(r => knex('locks').where({ id_origin: origin, id_target: target }));
+  return getUser(target)
+    .then(r => r.length ? unlock(origin) : null)
+    .then(r => r === null ? null : knex('locks').insert({ id_origin: origin, id_target: target }))
+    .then(r => r === null ? null : knex('locks').where({ id_origin: origin, id_target: target }));
+}
+
+function getLock (origin) {
+  return knex('locks').where({ id_origin: origin }).select('id_target')
+    .then(r => r[0] ? r[0].id_target : null);
 }
 
 
@@ -42,4 +48,5 @@ module.exports = () => ({
   getListening,
   lock,
   unlock,
+  getLock,
 });
