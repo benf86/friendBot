@@ -12,10 +12,10 @@ const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 const bot_token = process.env.SLACK_BOT_TOKEN || config.authentication.bot_token;
 
 const rtm = new RtmClient(bot_token);
-const cmds = require('./commands')(rtm);
+const cmds = require('./commands')(db)(rtm);
 
 const handleMessage = Promise.coroutine(function* (message) {
-  let cmd = cmds(message.channel)(message.text.split(' ', 3).slice(0,2).join(' '));
+  const cmd = cmds(message.channel)(message.text.split(' ', 4).slice(0, 3));
 
   if (cmd) return cmd(message.channel);
 
