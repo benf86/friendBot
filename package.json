@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@slack/client": "^3.8.1",
+    "bluebird": "^3.4.7",
     "knex": "^0.12.7",
     "sillyname": "^0.1.0",
     "slack-node": "^0.1.8",
