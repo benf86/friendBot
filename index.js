@@ -22,13 +22,13 @@ const handleMessage = Promise.coroutine(function* (message) {
     [target] = yield db.getListening();
     message.text = `    ${message.text}`;
   }
-  console.log(
+  /*console.log(
     `
 recipient: ${JSON.stringify(recipient)},
 origin: ${JSON.stringify(origin)},
 sender: ${JSON.stringify(sender)},
 target: ${JSON.stringify(target)}
-`);
+`);*/
 
   if (target && target.id_slack) rtm.sendMessage(`${sender.silly_name}\n>${message.text.split(' ').slice(2).join(' ')}`, target.id_slack);
 });
