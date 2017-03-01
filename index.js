@@ -17,17 +17,20 @@ const handleMessage = Promise.coroutine(function* (message) {
   const recipient = message.text.split(' ', 2).join(' ');
   const origin = message.channel;
   let [[sender], [target]] = yield Promise.all([db.addUser(origin), db.getUser(recipient)]);
-  /*console.log(
+
+  if (!target) {
+    [target] = yield db.getListening();
+    message.text = `    ${message.text}`;
+  }
+  console.log(
     `
 recipient: ${JSON.stringify(recipient)},
 origin: ${JSON.stringify(origin)},
 sender: ${JSON.stringify(sender)},
 target: ${JSON.stringify(target)}
-`);*/
+`);
 
-  return !target || !target.id_slack
-    ? rtm.sendMessage(`You are registered with the name ${sender.silly_name}`, origin)
-    : rtm.sendMessage(`${sender.silly_name}\n>${message.text}`, target.id_slack);
+  if (target && target.id_slack) rtm.sendMessage(`${sender.silly_name}\n>${message.text.split(' ').slice(2).join(' ')}`, target.id_slack);
 });
 
 // The client will emit an RTM.AUTHENTICATED event on successful connection, with the `rtm.start` payload if you want to cache it

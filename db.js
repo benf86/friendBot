@@ -15,11 +15,17 @@ function addUser (id) {
       : knex('users').insert({
         id_slack: id,
         silly_name: sillyName(),
+        listening: true,
       })
       .then(r => knex('users').where({ id: r[0] }))));
+}
+
+function getListening () {
+  return knex.raw('select * from users order by RANDOM() limit 1');
 }
 
 module.exports = () => ({
   addUser,
   getUser,
+  getListening,
 });

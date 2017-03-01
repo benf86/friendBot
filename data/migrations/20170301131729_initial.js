@@ -4,6 +4,7 @@ exports.up = function (knex, Promise) {
       table.increments('id');
       table.string('silly_name');
       table.string('id_slack');
+      table.boolean('listening');
     }),
     knex.schema.createTableIfNotExists('locks', function (table) {
       table.increments('id');
