@@ -16,12 +16,12 @@ function addUser (id) {
         id_slack: id,
         silly_name: sillyName(),
         listening: true,
-      })
+      }).catch(e => knex('users').where({ id_slack: id }))
       .then(r => knex('users').where({ id: r[0] }))));
 }
 
 function getListening (origin) {
-  return knex.raw('select * from users where id_slack <> ? order by RANDOM() limit 1', origin);
+  return knex.raw('select * from users where id_slack <> ? and listening = 1 order by RANDOM() limit 1', origin);
 }
 
 function unlock (origin) {
