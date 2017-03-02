@@ -20,8 +20,8 @@ function addUser (id) {
       .then(r => knex('users').where({ id: r[0] }))));
 }
 
-function getListening () {
-  return knex.raw('select * from users order by RANDOM() limit 1');
+function getListening (origin) {
+  return knex.raw('select * from users where id_slack <> ? order by RANDOM() limit 1', origin);
 }
 
 function unlock (origin) {

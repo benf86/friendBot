@@ -9,7 +9,7 @@ You can use the following commands
 - \`getLock\` will show you your currently locked chat partner
 - \`unlock\` removes the lock
 
-That's it! There is no logging, and the database contains no data that can personally identify you without some seriously annoying research, which nobody is going to be doing, so feel free to be honest. You can see my brainz here, to make sure: https://github.com/benf86/friendBot
+That's it! There is no logging, and the database contains no data that can personally identify you without some seriously annoying research, which nobody is going to be doing, so feel free to be honest.
 `, origin),
 
   lock: () => db.lock(origin, [command[1], command[2]].join(' '))

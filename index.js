@@ -19,4 +19,10 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function (rtmStartData) {
   rtm.on(RTM_EVENTS.MESSAGE, msgHandler);
 });
 
+process.on('SIGINT', function () {
+  rtm.disconnect();
+  process.exit();
+});
+
+
 rtm.start();

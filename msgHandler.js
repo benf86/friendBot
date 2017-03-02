@@ -29,11 +29,12 @@ module.exports = db => rtm => cmds => botID => Promise.coroutine(function* (mess
 
 
   if (!target) {
-    [target] = yield db.getListening();
+    [target] = yield db.getListening(origin);
+    if (!target) rtm.sendMessage('I\'m sorry, but you seem to be the only user, for now...', origin);
   }
 
-if (message.subtype === 'bot_message') return;
-// console.log(`user: ${message.user}
+  if (message.subtype === 'bot_message') return;
+//   console.log(`user: ${message.user}
 // origin: ${origin}
 // target: ${target.id_slack}
 // `);
