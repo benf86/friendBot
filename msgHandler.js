@@ -1,8 +1,9 @@
 const Promise = require('bluebird');
 
 function isCommand (cmds, message) {
+  if (!message.text) return false;
   const cmd = cmds(message.channel)(message.text.split(' ', 4).slice(0, 3));
-  if (cmd) {
+  if (typeof cmd === 'function') {
     cmd(message.channel);
     return true;
   }
@@ -16,25 +17,34 @@ function getLockTarget (db, origin) {
 }
 
 module.exports = db => rtm => cmds => Promise.coroutine(function* (message) {
+  if (!message || !message.text) return;
   if (isCommand(cmds, message)) return;
 
   const origin = message.channel;
-  const recipient = (yield getLockTarget(db, origin)) || message.text.split(' ', 2).join(' ');
+
+  const lockTarget = yield getLockTarget(db, origin);
+  const recipient = lockTarget || message.text.split(' ', 2).join(' ');
   let [[sender], [target]] = yield Promise.all([db.addUser(origin), db.getUser(recipient)]);
+
 
   if (!target) {
     [target] = yield db.getListening();
-    message.text = `    ${message.text}`;
   }
 
-  console.log(
-    `
-message: ${JSON.stringify(message, 0, 2)}
-recipient: ${JSON.stringify(recipient)},
-origin: ${JSON.stringify(origin)},
-sender: ${JSON.stringify(sender)},
-target: ${JSON.stringify(target)}
-`);
+if (message.subtype === 'bot_message') return;
+console.log(message);
+//   console.log(
+//     `
+// message: ${JSON.stringify(message.text, 0, 2)}
+// recipient: ${JSON.stringify(recipient)},
+// origin: ${JSON.stringify(origin)},
+// sender: ${JSON.stringify(sender)},
+// target: ${JSON.stringify(target)}
+// `);
 
-  if (target && target.id_slack) rtm.sendMessage(`${sender.silly_name}\n>${message.text.split(' ').slice(2).join(' ')}`, target.id_slack);
+  if (target && target.id_slack) {
+    if (message.text.slice(0, target.silly_name.length) === target.silly_name) message.text = message.text.slice(target.silly_name.length + 1);
+
+    rtm.sendMessage(`${sender.silly_name}\n>${message.text}`, target.id_slack);
+  }
 });

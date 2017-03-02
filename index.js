@@ -20,4 +20,6 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function (rtmStartData) {
 
 rtm.on(RTM_EVENTS.MESSAGE, msgHandler);
 
+rtm.on(RTM_EVENTS.RECONNECT_URL, r => r);
+
 rtm.start();
