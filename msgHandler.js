@@ -12,12 +12,13 @@ function isCommand (cmds, message) {
 
 function getLockTarget (db, origin) {
   return db.getLock(origin)
-    .tap(r => console.log(`lock exists: ${r}`))
-    .then(r => r);
+    //.tap(r => console.log(`lock exists: ${r}`));
 }
 
-module.exports = db => rtm => cmds => Promise.coroutine(function* (message) {
+module.exports = db => rtm => cmds => botID => Promise.coroutine(function* (message) {
+  //console.log(`bot: ${botID}`);
   if (!message || !message.text) return;
+  if (message.user === botID) return;
   if (isCommand(cmds, message)) return;
 
   const origin = message.channel;
@@ -32,7 +33,10 @@ module.exports = db => rtm => cmds => Promise.coroutine(function* (message) {
   }
 
 if (message.subtype === 'bot_message') return;
-console.log(message);
+// console.log(`user: ${message.user}
+// origin: ${origin}
+// target: ${target.id_slack}
+// `);
 //   console.log(
 //     `
 // message: ${JSON.stringify(message.text, 0, 2)}
