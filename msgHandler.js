@@ -17,6 +17,7 @@ function getLockTarget (db, origin) {
 
 module.exports = db => rtm => cmds => botID => Promise.coroutine(function* (message) {
   //console.log(`bot: ${botID}`);
+  if (message.channel === 'G4CPHQVDJ') return;
   if (!message || !message.text) return;
   if (message.user === botID) return;
   if (isCommand(cmds, message)) return;
