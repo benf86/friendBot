@@ -41,9 +41,21 @@ Simple. I work as your proxy and disguise names of both sides.
 `, origin),
 
   lock: () => db.lock(origin, [command[1], command[2]].join(' '))
+    .catch((err) => {
+      console.error(`Something went wrong with
+origin: ${origin}
+command: ${[command[1], command[2]].join(' ')}
+errorJSON: ${JSON.stringify(err, 0, 2)}
+error: ${err}`);
+      return db.unlock(origin)
+      .then(() => {
+        rtm.sendMessage('Error encountered while locking - potentially existing locks have been removed.', origin);
+        return null;
+      });
+    })
     .then(r => rtm.sendMessage(r
       ? `You've succesfully locked on to ${r[0].id_target}`
-      : `User with the handle ${[command[1], command[2]].join(' ')} does not exist`, origin)),
+      : `Lock failed. Does user ${[command[1], command[2]].join(' ')} exist?`, origin)),
 
   unlock: () => db.unlock(origin)
   .then(r => rtm.sendMessage(r ? 'Lock succesfully removed' : 'Not locked', origin)),
