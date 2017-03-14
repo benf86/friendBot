@@ -15,6 +15,7 @@ const MsgHandler = require('./msgHandler')(db)(rtm)(cmds);
 
 
 rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function (rtmStartData) {
+  rtm.removeAllListeners(RTM_EVENTS.MESSAGE);
   const msgHandler = MsgHandler(rtmStartData.self.id);
   rtm.on(RTM_EVENTS.MESSAGE, msgHandler);
 });
