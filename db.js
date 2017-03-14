@@ -30,14 +30,12 @@ function unlock (origin) {
 
 function lock (origin, target) {
   return getUser(target)
-    .then(r =>
-      (!r.length
+    .then(users =>
+      (!users.length
       ? null
-      : unlock(origin)
-        .then(r => !r[0]
-          ? null
-          : knex('locks').insert({ id_origin: origin, id_target: target })
-            .then(() => knex('locks').where({ id_origin: origin, id_target: target })))));
+      : unlock(origin))
+    .then(r => (knex('locks').insert({ id_origin: origin, id_target: target }))
+    .then(() => knex('locks').where({ id_origin: origin, id_target: target }))));
 }
 
 function getLock (origin) {
