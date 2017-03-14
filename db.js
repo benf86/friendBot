@@ -43,6 +43,11 @@ function getLock (origin) {
     .then(r => r[0] ? r[0].id_target : null);
 }
 
+function mute (origin, listening) {
+  return knex('users').where({ id_slack: origin }).update({ listening })
+  .then(() => getUser(origin));
+}
+
 
 
 module.exports = () => ({
@@ -52,4 +57,5 @@ module.exports = () => ({
   lock,
   unlock,
   getLock,
+  mute,
 });

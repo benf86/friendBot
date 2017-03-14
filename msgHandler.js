@@ -29,9 +29,9 @@ module.exports = db => rtm => cmds => botID => Promise.coroutine(function* (mess
   let [[sender], [target]] = yield Promise.all([db.addUser(origin), db.getUser(recipient)]);
 
 
-  if (!target) {
+  if (!target || !target.listening) {
     [target] = yield db.getListening(origin);
-    if (!target) rtm.sendMessage('I\'m sorry, but you seem to be the only user, for now...', origin);
+    if (!target) rtm.sendMessage('Either you are the only user or the user you want to message has muted me :(', origin);
   }
 
   if (message.subtype === 'bot_message') return;

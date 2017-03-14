@@ -35,6 +35,10 @@ Simple. I work as your proxy and disguise names of both sides.
 >If you want to see who your currently locked partner is, use getLock.
 >\`/msg @friend getLock\`
 
+*mute/unmute*
+> If you do not want to receive any more messages from me, use mute. To reenable my messages, use unmute.
+>\`/msg @friend mute\`
+
 *X Team*
 >Finally, if you want to tell the core team something, but would like to remain anonymous, just use X Team as the name and type your message. I will deliver it on your behalf, every bit as anonmously as all the rest. You can also lock X Team as any other user.
 >\`/msg @friend X Team Lorem Ipsum etc. etc.\`
@@ -62,4 +66,10 @@ error: ${err}`);
 
   getLock: () => db.getLock(origin)
   .then(r => rtm.sendMessage(r ? `You are currently locked to ${r}` : 'Not locked', origin)),
+
+  mute: () => db.mute(origin, false)
+  .then(() => rtm.sendMessage('No more random messages for you!', origin)),
+
+  unmute: () => db.mute(origin, true)
+  .then(() => rtm.sendMessage('You\'re listening again!', origin)),
 }[command[0]]);
